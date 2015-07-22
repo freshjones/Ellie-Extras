@@ -30,3 +30,19 @@ function ellie_extras_ds_pre_render_alter(&$layout_render_array, $context, &$var
     }
 
 }
+
+function ellie_extras_entity_view($entity, $type, $view_mode, $langcode)
+{
+
+    $allowed = array('node');
+
+    if (user_is_anonymous() && $view_mode == 'full' && !in_array($type, $allowed) && _entity_is_page($type, $entity) )
+    {
+        drupal_goto('<front>', array(), '301');
+    }
+
+}
+
+function _entity_is_page($type, $entity) {
+    return (($uri = entity_uri($type, $entity)) && current_path() == $uri['path']);
+}
