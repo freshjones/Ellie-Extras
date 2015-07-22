@@ -1,0 +1,7 @@
+name = Ellie Extras
+description = "Standard hooks and overrides"
+core = 7.x
+package = FreshJones
+version = 7.x-1.0
+dependencies[] = ctools
+dependencies[] = ds

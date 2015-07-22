@@ -1,0 +1,32 @@
+<?php
+
+function ellie_extras_ds_pre_render_alter(&$layout_render_array, $context, &$variables)
+{
+
+    if (isset($variables['classes_array']) && !empty($variables['classes_array']))
+    {
+        $classes = $variables['classes_array'];
+
+        $strip = array('panel', 'pane', 'entity', 'content', 'view');
+
+        foreach($classes AS $key => $class)
+        {
+            $delimiter = strpos($class, '-');
+            $prefix = substr($class, 0, $delimiter);
+
+            if(in_array($class, $strip) || in_array($prefix, $strip))
+            {
+                unset($classes[$key]);
+            }
+        }
+
+        if(!empty($classes))
+        {
+            $classes = array_merge($classes);
+        }
+
+        $variables['classes_array'] = $classes;
+
+    }
+
+}
