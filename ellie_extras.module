@@ -43,6 +43,64 @@ function ellie_extras_entity_view($entity, $type, $view_mode, $langcode)
 
 }
 
-function _entity_is_page($type, $entity) {
+function ellie_extras_html_head_alter(&$head_elements)
+{
+
+    global $base_url;
+
+    $default_theme = variable_get('theme_default', 'ymca_one');
+
+    foreach($head_elements as $key => $element) 
+    {
+    
+        if( !empty($element['#attributes']) ) 
+        {
+
+            if( array_key_exists('rel', $element['#attributes']) ) 
+            {
+
+                if($element['#attributes']['rel'] === 'shortcut icon') 
+                {
+                    
+                    $ellie_settings = variable_get('ellie_settings', array());
+
+                    if( isset($ellie_settings['active_theme_color']) )
+                    {
+                        
+                        $faviconLink = drupal_get_path('theme', $default_theme) . '/favicons/' . $ellie_settings['active_theme_color'] . '/favicon.ico';
+
+                        if( file_exists(DRUPAL_ROOT . '/' . $faviconLink) )
+                        {
+                            $head_elements[$key]['#attributes']['href'] = $base_url . '/' . $faviconLink;
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
+    
+}
+
+function ellie_extras_preprocess_html(&$vars) 
+{
+    
+    $ellie_settings = variable_get('ellie_settings', array());
+
+    if( isset($ellie_settings['active_theme_color']) )
+    {
+        $vars['classes_array'][] = 'color-scheme-' . $ellie_settings['active_theme_color'];
+    }
+
+}
+
+function _entity_is_page($type, $entity) 
+{
     return (($uri = entity_uri($type, $entity)) && current_path() == $uri['path']);
 }
+
+
